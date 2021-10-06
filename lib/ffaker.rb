@@ -30,6 +30,7 @@ module FFaker
 
   autoload :Address, 'ffaker/address'
   autoload :AddressAU, 'ffaker/address_au'
+  autoload :AddressBE, 'ffaker/address_be'
   autoload :AddressBR, 'ffaker/address_br'
   autoload :AddressCA, 'ffaker/address_ca'
   autoload :AddressCH, 'ffaker/address_ch'
