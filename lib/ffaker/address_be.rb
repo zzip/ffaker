@@ -7,6 +7,8 @@ module FFaker
     extend ModuleUtils
     extend self
 
+    STREET_NBR_FORMATS = ['##', '#', '#a', '#b', '###'].freeze
+
     def postal_code
       FFaker::String.from_regexp(/[1-9]\d{3}/)
     end
@@ -17,20 +19,16 @@ module FFaker
 
     def street_name
       name = fetch_sample([true, false]) ? NameNL.last_name : NameNL.first_name
-      name + random_type_of_street
+      name + street_suffix
     end
 
-    def city
-      fetch_sample(CITY)
+    def street_address(include_secondary = false)
+      str = "#{street_name} #{building_number}"
+      str << ", #{appartment_number}" if include_secondary
+      str
     end
 
-    def province
-      fetch_sample(PROVINCE)
-    end
-
-    private
-
-    def random_type_of_street
+    def street_suffix
       case rand(0..19)
       when 0 then 'weg'
       when 1 then 'steenweg'
@@ -39,6 +37,18 @@ module FFaker
       when 4 then 'laan'
       else 'straat'
       end
+    end
+
+    def building_number
+      FFaker.numerify(fetch_sample(STREET_NBR_FORMATS))
+    end
+
+    def city
+      fetch_sample(CITY)
+    end
+
+    def province
+      fetch_sample(PROVINCE)
     end
   end
 end

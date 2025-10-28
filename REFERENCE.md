@@ -262,19 +262,19 @@
 
 | Method | Example |
 | ------ | ------- |
-| `building_number` | 4343, 765, 792 |
-| `city` | Geer, Oudenburg, Bastogne |
-| `city_prefix` | North, Port, East |
-| `city_suffix` | chester, berg, burgh |
-| `country` | Djibouti, Honduras, Ukraine |
-| `country_code` | WF, TH, MC |
-| `neighborhood` | Auburn North, Olmsted Falls Central, East Renton |
-| `postal_code` | 3776, 7404, 8163 |
-| `province` | Luxembourg, Limburg, Liège |
-| `secondary_address` | Suite 554, Apt. 824, Suite 627 |
-| `street_address` | 53626 Chiquitastraat, 536 Federicostraat, 07957 Collierstraat |
-| `street_name` | Millsstraat, Kuvalisstraat, Donstraat |
-| `street_suffix` | Route, Loop, Hill |
+| `building_number` | 4, 4b, 7a |
+| `city` | Montigny-le-Tilleul, Malle, Celles |
+| `city_prefix` | East, West, North |
+| `city_suffix` | port, haven, mouth |
+| `country` | Switzerland, Iraq, Italy |
+| `country_code` | BL, MG, BO |
+| `neighborhood` | Sunshine-Gardens, Candlewood Country Club, Jupiter South/Abacoa |
+| `postal_code` | 5227, 8664, 1471 |
+| `province` | Liège, Vlaams-Brabant, Luxembourg |
+| `secondary_address` | Suite 655, Suite 428, Apt. 496 |
+| `street_address` | Schillerbaan 6b, Leonorastraat 8b, Rolfstraat 583 |
+| `street_name` | Gutmannstraat, Justinestraat, Denesikstraat |
+| `street_suffix` | straat, baan, steenweg |
 | `time_zone` | Europe/Lisbon, Europe/Stockholm, Europe/Athens |
 | `uk_country` | ❗ *[uk_country] is deprecated. For UK addresses please use the AddressUK module* |
 | `uk_county` | ❗ *[uk_county] is deprecated. For UK addresses please use the AddressUK module* |
