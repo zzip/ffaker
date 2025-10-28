@@ -1,30 +1,32 @@
 # frozen_string_literal: true
 
 require_relative '../lib/ffaker'
+require 'set'
+
+# always use the same seed for consistency
+FFaker::Random.seed = 1337
 
 ICONS = {
   error: '‼️',
   warning: '❗'
 }.freeze
 
+UTILS_MODULES = %i[ArrayUtils ModuleUtils RandomUtils Random Version].freeze
+UTILS_METHODS = %i[k underscore fetch_sample rand shuffle unique luhn_check].freeze
+
 # Get a list of sections
 def faker_modules
-  FFaker.constants.sort.map do |const|
-    mod = FFaker.const_get(const)
-    next unless mod.is_a?(Module)
-    next if mod == FFaker::ArrayUtils
-    next if mod == FFaker::ModuleUtils
-    next if mod == FFaker::RandomUtils
-    next if mod == FFaker::Random
-
-    mod
-  end.compact
+  FFaker
+    .constants
+    .reject { |const| UTILS_MODULES.include?(const) }
+    .select { |const| FFaker.const_get(const).instance_of?(Module) }
+    .sort
+    .map { |const| FFaker.const_get(const) }
 end
 
 # Returns faker methods for a given module
 def faker_methods(mod)
-  methods = mod.methods - Module.methods -
-            %i[k underscore fetch_sample rand shuffle unique luhn_check]
+  methods = mod.methods - Module.methods - UTILS_METHODS
 
   # For Company.name (et al), don't discard :name if it was reimplemented
   methods << :name if mod.send(:name) != mod.to_s
@@ -34,12 +36,14 @@ end
 # Catch deprecation warnings.
 # This `#warn` overrides Kernel#warn
 def warn(msg)
-  $warnings << msg if $warnings
+  return unless Kernel.instance_variable_get(:@ffaker_warnings)
+
+  Kernel.instance_variable_set(:@ffaker_warnings, Kernel.instance_variable_get(:@ffaker_warnings) << msg)
 end
 
 def catch_warnings
-  $warnings = []
-  [yield, $warnings]
+  Kernel.instance_variable_set(:@ffaker_warnings, [])
+  [yield, Kernel.instance_variable_get(:@ffaker_warnings)]
 end
 
 def escape(str)
@@ -66,13 +70,9 @@ sections = faker_modules.map do |mod|
     else
       begin
         examples, warnings = catch_warnings do
-          Array.new(3) { mod.send meth }
+          Array.new(3) { mod.unique.send meth }
         end
-        right = if warnings.any?
-                  "#{ICONS[:warning]} *#{warnings.first}*"
-                else
-                  (escape examples.join(', ')).to_s
-                end
+        right = warnings.any? ? "#{ICONS[:warning]} *#{warnings.first}*" : (escape examples.join(', ')).to_s
       rescue StandardError => e
         right = "#{ICONS[:error]} #{e.class}: #{e.message}"
       end

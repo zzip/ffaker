@@ -5,7 +5,7 @@ module FFaker
     extend ModuleUtils
     extend self
 
-    SUFFIXES = %w[Inc and\ Sons LLC Group].freeze
+    SUFFIXES = ['Inc', 'and Sons', 'LLC', 'Group'].freeze
     POSITION_PREFIXES = %w[Executive Assistant General Associate].freeze
     POSITIONS = %w[President Manager Director Secretary Consultant].freeze
 
@@ -13,7 +13,7 @@ module FFaker
       case rand(0..2)
       when 0 then "#{Name.last_name} #{suffix}"
       when 1 then "#{Name.last_name}-#{Name.last_name}"
-      when 2 then format('%s, %s and %s', Name.last_name, Name.last_name, Name.last_name)
+      when 2 then "#{Name.last_name}, #{Name.last_name} and #{Name.last_name}"
       end
     end
 
@@ -35,12 +35,9 @@ module FFaker
 
     def position
       case rand(0..2)
-      when 0 then
-        [fetch_sample(POSITION_PREFIXES), fetch_sample(POSITIONS)]
-      when 1 then
-        [fetch_sample(POSITION_AREAS), fetch_sample(POSITIONS)]
-      when 2 then
-        [fetch_sample(POSITION_PREFIXES), fetch_sample(POSITION_AREAS), fetch_sample(POSITIONS)]
+      when 0 then [fetch_sample(POSITION_PREFIXES), fetch_sample(POSITIONS)]
+      when 1 then [fetch_sample(POSITION_AREAS), fetch_sample(POSITIONS)]
+      when 2 then [fetch_sample(POSITION_PREFIXES), fetch_sample(POSITION_AREAS), fetch_sample(POSITIONS)]
       end.join(' ')
     end
   end

@@ -13,16 +13,14 @@ module DeterministicHelper
   # Accepts a block. Executes the block multiple times after resetting
   # the internal Random Number Generator state and compared the results of
   # each execution to make sure they are the same.
-  def assert_deterministic(options = {})
-    raise ArgumentError, 'Must pass a block' unless block_given?
+  def assert_deterministic(options = {}, &block)
+    raise ArgumentError, 'Must pass a block' unless block
 
     options = { message: 'Results are not repeatable' }.merge(options)
 
     returns = Array.new(2) do
       FFaker::Random.reset!
-      Array.new(5) do
-        yield
-      end
+      Array.new(5, &block)
     end
 
     assert(returns.uniq.length == 1, options[:message])
@@ -37,7 +35,7 @@ module DeterministicHelper
       end
     operator_name += '_or_equal_to' if operator[1] == '='
 
-    define_method "assert_#{operator_name}" do |got, expected|
+    define_method :"assert_#{operator_name}" do |got, expected|
       assert(
         got.public_send(operator, expected),
         "Expected #{operator} \"#{expected}\", but got #{got}"
@@ -58,8 +56,8 @@ module DeterministicHelper
   end
 
   %w[less_than_or_equal_to between].each do |method_name|
-    define_method "assert_random_#{method_name}" do |*args, &block|
-      assert_random(block) { send "assert_#{method_name}", block.call, *args }
+    define_method :"assert_random_#{method_name}" do |*args, &block|
+      assert_random(block) { send :"assert_#{method_name}", block.call, *args }
     end
   end
 
@@ -78,7 +76,7 @@ module DeterministicHelper
     #  }
     def assert_methods_are_deterministic(klass, *methods)
       Array(methods).each do |meth|
-        define_method "test_#{meth}_is_deterministic" do
+        define_method :"test_#{meth}_is_deterministic" do
           assert_deterministic(message: "Results from `#{klass}.#{meth}` are not repeatable") do
             klass.send(meth)
           end

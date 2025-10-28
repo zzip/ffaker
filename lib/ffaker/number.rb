@@ -15,12 +15,16 @@ module FFaker
       FFaker.numerify("#{whole_part_pattern}.#{fractional_part_pattern}").to_f
     end
 
+    def between(from: 1.00, to: 5000.00)
+      fetch_sample(from..to)
+    end
+
     private
 
     def generate_pattern(digits)
-      raise ArgumentError.new('Digits cannot be less than 1') if digits < 1
+      raise ArgumentError, 'Digits cannot be less than 1' if digits < 1
 
-      "#{fetch_sample(1..9)}#{"#" * (digits - 1)}"
+      "#{fetch_sample(1..9)}#{'#' * (digits - 1)}"
     end
   end
 end

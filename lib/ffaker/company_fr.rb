@@ -5,13 +5,13 @@ module FFaker
     extend ModuleUtils
     extend self
 
-    SUFFIXES = %w[SA et\ fils SARL Groupe].freeze
+    SUFFIXES = ['SA', 'et fils', 'SARL', 'Groupe'].freeze
 
     def name
       case rand(0..2)
       when 0 then "#{NameFR.last_name} #{suffix}"
       when 1 then "#{NameFR.last_name}-#{NameFR.last_name}"
-      when 2 then format('%s, %s and %s', NameFR.last_name, NameFR.last_name, NameFR.last_name)
+      when 2 then "#{NameFR.last_name}, #{NameFR.last_name} and #{NameFR.last_name}"
       end
     end
 

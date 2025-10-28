@@ -38,8 +38,20 @@ module FFaker
       end
     end
 
-    def full_address
-      "#{street}, #{building_number}, #{city}, #{state}, Brazil"
+    def complement
+      FFaker.numerify(fetch_sample(COMPLEMENT))
+    end
+
+    def neighborhood
+      prefix = fetch_sample(NEIGHBORHOOD_PREFIXES)
+      "#{prefix} #{NameBR.first_name}"
+    end
+
+    def full_address(with_complement: false)
+      base_address_order = [street, building_number, neighborhood, city, state, 'Brazil']
+      return base_address_order.join(', ') unless with_complement
+
+      base_address_order.insert(2, complement).join(', ')
     end
   end
 end

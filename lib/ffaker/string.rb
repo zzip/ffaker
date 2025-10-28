@@ -21,7 +21,7 @@ module FFaker
       @last_token = nil
 
       # Drop surrounding /'s and split into characters
-      tokens = exp.inspect[1...-1].split(//)
+      tokens = exp.inspect[1...-1].chars
       result << process_token(tokens) until tokens.empty?
 
       result
@@ -53,15 +53,15 @@ module FFaker
       when '?'
         # TODO: Let ? generate nothing
         '' # We already printed its target
-      when '+' then
+      when '+'
         tokens.unshift(token) if rand(0..1) == 1 # Leave the `+` on to run again
         process_token(@last_token) # Run the last one at least once
-      when '*' then
+      when '*'
         tokens.unshift(token) if rand(0..1) == 1 # Leave the `*` on to run again
         return '' if rand(0..1) == 1 # Or maybe do nothing
 
         process_token(@last_token) # Else run the last one again
-      when '{' then
+      when '{'
         number = +''
         while (ch = tokens.shift) != '}'
           number << ch
@@ -76,14 +76,14 @@ module FFaker
 
     def generate_token(token, tokens)
       case token
-      when /\w/ then
+      when /\w/
         @last_token = [token]
         token
-      when BACKSLASH then
+      when BACKSLASH
         token = tokens.shift
         @last_token = ['\\', token]
         special(token)
-      when '[' then
+      when '['
         set = []
         while (ch = tokens.shift) != ']'
           set << ch

@@ -65,7 +65,7 @@ If you want to add new modules or localization data, use one of the
 (or create a new one!).
 
 **const_missing** is
-[overriden](https://github.com/ffaker/ffaker/blob/main/lib/ffaker/utils/module_utils.rb#L9)
+[overridden](https://github.com/ffaker/ffaker/blob/main/lib/ffaker/utils/module_utils.rb#L9)
 for Faker modules, so if you try to use a constant that is not defined
 in the module, the
 [override](https://github.com/ffaker/ffaker/blob/main/lib/ffaker/utils/module_utils.rb#L9)
@@ -77,12 +77,23 @@ name will be set with data from `ffaker/data/name/first_names`.
 
 To get repeatable results in Minitest or Rspec, follow [these instructions](RANDOM.md#using-the-same-random-seed-as-your-tests).
 
-## Unique results
+## Unique values
 
-You can get unique value from any methods in FFaker like this:
+You can ensure unique values are generated using the `unique` method. `ffaker` will retry the generation
+until an unique value if found.
 
-```rb
-FFaker::Name.unique.name
+Example:
+```ruby
+FFaker::Name.unique.name # ensures an unique value is returned for FFaker::Name
+```
+
+If an unique value cannot be generated within a maximum limit of retries for a generator
+a `FFaker::UniqueUtils::RetryLimitExceeded` error will be raised.
+
+You can prevent exceeding the limit by clearing the record of used values (e.g. between tests):
+```ruby
+FFaker::Name.unique.clear # clears the used values for FFaker::Name
+FFaker::UniqueUtils.clear # clears the used values for all generators
 ```
 
 ## TODO
@@ -94,8 +105,9 @@ FFaker::Name.unique.name
 
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
+* Add tests for it. This is important so I don't break it in a future version unintentionally.
+   * To run all the tests: `rake test`
+   * To run a single test: `rake test TEST=test/test_lorem_br.rb`
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.

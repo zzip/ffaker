@@ -22,17 +22,17 @@ module FFaker
 
     def datetime(params = {})
       years_back = params[:year_range] || 5
-      latest_year = params [:year_latest] || 0
+      latest_year = params[:year_latest] || 0
       year = (rand * years_back).ceil + (::DateTime.now.year - latest_year - years_back)
       month = rand(1..12)
-      day = rand(1..Date.new(year, month, -1).day)
+      day = rand(1..::Date.new(year, month, -1).day)
       hours = params[:hours] || rand(0..23)
       minutes = params[:minutes] || rand(0..59)
       series = [date = ::DateTime.new(year, month, day, hours, minutes)]
       return date unless params[:series]
 
       params[:series].each do |some_time_after|
-        series << series.last + (rand * some_time_after).ceil
+        series << (series.last + (rand * some_time_after).ceil)
       end
       series
     end
@@ -44,7 +44,7 @@ module FFaker
     def between(from, to)
       from_value = convert_to_time(from)
       to_value = convert_to_time(to)
-      ::Time.at(from_value + rand * (to_value.to_f - from_value.to_f))
+      ::Time.at(from_value + (rand * (to_value.to_f - from_value.to_f)))
     end
 
     private

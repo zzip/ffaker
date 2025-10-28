@@ -1,5 +1,17 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+
+inherit_mode:
+  merge:
+    - Include
+    - Exclude
+
+inherit_from:
+  - .rubocop_todo.yml
+
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.1
   NewCops: enable
 Style/StringLiterals:
   Description: Checks if uses of quotes match the configured preference.
@@ -20,4 +32,29 @@ Style/Encoding:
 Style/ModuleFunction:
   Enabled: false
 Style/Documentation:
+  Enabled: false
+Style/AsciiComments:
+  Enabled: true
+  Exclude:
+    - '**/*_cs.rb'
+    - '**/*_ja.rb'
+    - '**/*_mx.rb'
+    - '**/*_se.rb'
+Style/OptionalBooleanParameter:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: true
+  Max: 200
+Metrics/ClassLength:
+  Exclude:
+    - 'test/**/*.rb'
+Metrics/MethodLength:
+  AllowedPatterns:
+    - 'test_'
+Metrics/AbcSize:
+  AllowedPatterns:
+    - 'test_'
+Naming/PredicateMethod:
+  Enabled: false
+Style/RedundantArgument:
   Enabled: false
